@@ -327,7 +327,7 @@
                       @endif
                     </td>
                     <td class="whitespace-nowrap" :class="toggle ? 'hidden' : 'table-cell'">
-                      <div class="flex items-center justify-around">
+                      <div class="flex items-center gap-2 justify-around">
                         <a href="{{ route('delivery.edit', ['id' => $record->id]) }}" wire:navigate>
                           <button class="btn btn-circle">
                             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"

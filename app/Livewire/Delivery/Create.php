@@ -17,6 +17,8 @@ class Create extends Component
     use WithFileUploads;
 
     #[Validate('required', message: '画像は必ず登録してください。')]
+    #[Validate('image', message: '画像データをアップロードしてください')]
+    #[Validate('max:12288', message: 'サイズが大きすぎます。')]
     public $photo;
     public $count;
 

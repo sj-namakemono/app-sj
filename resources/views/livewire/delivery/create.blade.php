@@ -44,7 +44,7 @@
         <div class="grid gap-8" x-show="!toggle">
           {{-- 写真 --}}
           <div
-            class="@if ($photo) border-primary @endif relative flex flex-col items-center justify-center rounded-xl border-2 bg-base-100 p-8 text-gray-500 shadow-xl">
+            class="@if ($photo) border-primary @endif relative flex flex-col items-center justify-center rounded-xl border-2 bg-base-100 p-8 text-gray-500">
             <label for="photo" class="flex w-60 cursor-pointer rounded-full border-2 bg-base-100 md:col-span-1">
               <input type="file" capture="environment" accept="image/*" class="hidden" id="photo"
                 wire:model.live="photo" />
@@ -277,7 +277,7 @@
             @endif
             <div class="card-body">
               <h2 class="card-title">以下の内容で送信します</h2>
-              <div class="my-4 rounded-lg border p-4 text-lg font-bold">
+              <div class="my-4 text-lg font-bold">
                 <div class="">引取場所：{{ $departure }}</div>
                 <div class="">送付先：{{ $destination }}</div>
                 <div class="">

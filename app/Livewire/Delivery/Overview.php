@@ -91,6 +91,7 @@ class Overview extends Component
             'receipt_datetime' => Carbon::now()->format('Y/m/d H:i'),
         ]);
 
+        session()->flash('flash.banner', '配達が完了しました。');
         $this->redirectRoute('delivery.overview');
     }
 

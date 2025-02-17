@@ -178,6 +178,7 @@
                     <td class="whitespace-nowrap">
                       {{ $record?->deliveryPeople->name ?? '-' }}
                     </td>
+                    {{-- 出発時間 --}}
                     <td class="whitespace-nowrap">
                       @if ($record->departure_datetime)
                         {{ $record->departure_datetime->format('Y/m/d H:i') }}
@@ -201,7 +202,20 @@
                               </figure>
                               <div class="grid gap-4">
                                 <h2 class="card-title">出発日時を記録</h2>
-                                <p>配送担当者を入力、またはリストから選択してください。</p>
+                                <p>配送担当者をリストから選択、または入力してください。</p>
+                                @if ($registered_user->isnotEmpty())
+                                  <div class="max-h-40 overflow-auto rounded-lg">
+                                    @foreach ($registered_user as $user)
+                                      <div class="form-control rounded-md px-4 hover:bg-base-200">
+                                        <label class="label cursor-pointer">
+                                          <span class="label-text">{{ $user->name }}</span>
+                                          <input type="radio" name="radio-{{ $key }}" class="radio"
+                                            wire:model="selected_user" value="{{ $user->id }}" />
+                                        </label>
+                                      </div>
+                                    @endforeach
+                                  </div>
+                                @endif
                                 <label class="input input-bordered flex items-center gap-2">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                                     class="h-4 w-4 opacity-70">
@@ -211,17 +225,6 @@
                                   <input type="text" class="input grow border-none" placeholder="Username"
                                     wire:model="new_user" />
                                 </label>
-                                <div class="max-h-40 overflow-auto rounded-lg">
-                                  @foreach ($registered_user as $user)
-                                    <div class="form-control rounded-md px-4 hover:bg-base-200">
-                                      <label class="label cursor-pointer">
-                                        <span class="label-text">{{ $user->name }}</span>
-                                        <input type="radio" name="radio-{{ $key }}" class="radio"
-                                          wire:model="selected_user" value="{{ $user->id }}" />
-                                      </label>
-                                    </div>
-                                  @endforeach
-                                </div>
                                 <div class="flex justify-end gap-2">
                                   <form method="dialog">
                                     <button class="btn">キャンセル</button>
@@ -235,6 +238,7 @@
                         </dialog>
                       @endif
                     </td>
+                    {{-- 到着時間 --}}
                     <td class="whitespace-nowrap">
                       @if ($record->arrival_datetime)
                         {{ $record->arrival_datetime->format('Y/m/d H:i') }}
@@ -279,6 +283,7 @@
                         @endif
                       @endif
                     </td>
+                    {{-- 受け取り日時 --}}
                     <td class="whitespace-nowrap">
                       @if ($record->receipt_datetime)
                         {{ $record->receipt_datetime->format('Y/m/d H:i') }}
@@ -326,6 +331,7 @@
                         @endif
                       @endif
                     </td>
+                    {{-- ボタン --}}
                     <td class="whitespace-nowrap" :class="toggle ? 'hidden' : 'table-cell'">
                       <div class="flex items-center justify-around gap-2">
                         <a href="{{ route('delivery.edit', ['id' => $record->id]) }}" wire:navigate>

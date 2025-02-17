@@ -33,7 +33,7 @@
         <x-label for="new_user" value="担当者名" />
         <x-input id="new_user" type="text" class="mt-1 block w-full" wire:model="new_user" placeholder=""
           autocomplete="off" />
-        <x-input-error for="endpoint" class="mt-2" />
+        <x-input-error for="new_user" class="mt-2" />
         <div class="mt-4">
           <x-label for="" value="担当者リスト" />
           <div class="col-span-6 mt-1 sm:col-span-4">

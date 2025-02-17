@@ -61,6 +61,7 @@
             </label>
             <p class="mt-4 font-bold tracking-wider sm:text-lg" @if ($photo) hidden @endif>
               荷物の写真をアップロードしてください。</p>
+            <x-input-error for="photo" class="mt-2" />
             @if ($photo)
               <img src="{{ $photo->temporaryUrl() }}" alt="" class="mt-4 h-40 w-auto">
               <div class="mt-4 flex items-center gap-4">

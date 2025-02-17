@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('delivery_people', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
-            $table->text('name')->unique();
+            $table->text('name');
             $table->boolean('is_active')->default(true);
         });
     }

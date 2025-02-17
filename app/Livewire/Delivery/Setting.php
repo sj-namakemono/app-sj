@@ -4,7 +4,9 @@ namespace App\Livewire\Delivery;
 
 use Livewire\Component;
 use App\Models\DeliveryPerson;
+use Illuminate\Validation\Rule;
 use App\Models\DeliveryPreference;
+use Illuminate\Support\Facades\DB;
 
 class Setting extends Component
 {
@@ -12,6 +14,20 @@ class Setting extends Component
 
     public $registered_user;
     public $new_user;
+
+    protected function rules()
+    {
+        return [
+            'new_user' => Rule::unique('delivery_people', 'name')->where('is_active', true)
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'new_user.*' => 'このユーザーは既に登録されています。'
+        ];
+    }
 
     public function mount()
     {
@@ -21,29 +37,60 @@ class Setting extends Component
 
     public function editUrl()
     {
-        DeliveryPreference::updateOrCreate(['id' => 1], [
-            'teams_endpoint' => $this->endpoint,
-        ]);
+        DB::beginTransaction();
+        try {
+            DeliveryPreference::updateOrCreate(['id' => 1], [
+                'teams_endpoint' => $this->endpoint,
+            ]);
 
-        session()->flash('flash.banner', '通知urlを設定しました。');
-        $this->redirectRoute('delivery.setting');
+            DB::commit();
+
+            session()->flash('flash.banner', '通知urlを設定しました。');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('flash.bannerStyle', 'warning');
+            session()->flash('flash.banner', $e->getMessage());
+        } finally {
+            $this->redirectRoute('delivery.setting');
+        }
     }
 
     public function editUser()
     {
-        DeliveryPerson::create([
-            'name' => $this->new_user,
-        ]);
+        $this->validate();
 
-        session()->flash('flash.banner', '配送担当者を作成しました。');
-        $this->redirectRoute('delivery.setting');
+        DB::beginTransaction();
+        try {
+            DeliveryPerson::create([
+                'name' => $this->new_user,
+            ]);
+
+            DB::commit();
+
+            session()->flash('flash.banner', '配送担当者を作成しました。');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('flash.bannerStyle', 'warning');
+            session()->flash('flash.banner', $e->getMessage());
+        } finally {
+            $this->redirectRoute('delivery.setting');
+        }
     }
 
     public function deleteUser($id)
     {
-        DeliveryPerson::find($id)->update(['is_active' => false]);
-        session()->flash('flash.banner', '配送担当者を削除しました。');
-        $this->redirectRoute('delivery.setting');
+        DB::beginTransaction();
+        try {
+            DeliveryPerson::find($id)->update(['is_active' => false]);
+            DB::commit();
+            session()->flash('flash.banner', '配送担当者を削除しました。');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            session()->flash('flash.bannerStyle', 'warning');
+            session()->flash('flash.banner', $e->getMessage());
+        } finally {
+            $this->redirectRoute('delivery.setting');
+        }
     }
 
     public function render()

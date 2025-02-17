@@ -4,10 +4,13 @@ namespace App\Livewire\Delivery;
 
 use Livewire\Component;
 use App\Models\Delivery;
+use Livewire\WithPagination;
 use App\Models\DeliveryPerson;
 use Illuminate\Support\Carbon;
-use Livewire\WithPagination;
+use Illuminate\Validation\Rule;
+use Livewire\Attributes\Validate;
 use Livewire\WithoutUrlPagination;
+use Illuminate\Validation\ValidationException;
 
 class Overview extends Component
 {
@@ -29,8 +32,23 @@ class Overview extends Component
 
     public $toggle;
     public $registered_user;
+
     public $new_user;
     public $selected_user;
+
+    protected function rules()
+    {
+        return [
+            'new_user' => Rule::unique('delivery_people', 'name')->where('is_active', true)
+        ];
+    }
+
+    protected function messages()
+    {
+        return [
+            'new_user.*' => 'このユーザーは既に登録されています。リストから選択して再度送信してください。'
+        ];
+    }
 
     public function mount()
     {
@@ -53,26 +71,35 @@ class Overview extends Component
 
     public function setDeparture($recordId)
     {
-        if ($this->new_user) {
-            $new_user = DeliveryPerson::create([
-                'name' => $this->new_user
-            ]);
-
-            Delivery::find($recordId)->update([
-                'departure_datetime' => Carbon::now(),
-                'delivery_people_id' => $new_user->id
-            ]);
-
+        try {
+            $this->validateOnly('new_user');
+        } catch (ValidationException $e) {
+            $this->new_user = null;
+            session()->flash('flash.bannerStyle', 'warning');
+            session()->flash('flash.banner', $e->getMessage());
             $this->redirectRoute('delivery.overview');
-        }
+        } finally {
+            if ($this->new_user) {
+                $new_user = DeliveryPerson::create([
+                    'name' => $this->new_user
+                ]);
 
-        if ($this->selected_user) {
-            Delivery::find($recordId)->update([
-                'departure_datetime' => Carbon::now(),
-                'delivery_people_id' => $this->selected_user
-            ]);
+                Delivery::find($recordId)->update([
+                    'departure_datetime' => Carbon::now(),
+                    'delivery_people_id' => $new_user->id
+                ]);
 
-            $this->redirectRoute('delivery.overview');
+                $this->redirectRoute('delivery.overview');
+            }
+
+            if ($this->selected_user) {
+                Delivery::find($recordId)->update([
+                    'departure_datetime' => Carbon::now(),
+                    'delivery_people_id' => $this->selected_user
+                ]);
+
+                $this->redirectRoute('delivery.overview');
+            }
         }
     }
 

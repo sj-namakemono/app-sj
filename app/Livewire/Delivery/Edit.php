@@ -6,10 +6,7 @@ use Livewire\Component;
 use App\Models\Delivery;
 use App\Models\DeliveryPerson;
 use Illuminate\Support\Carbon;
-use Livewire\Attributes\Validate;
 use Illuminate\Support\Facades\DB;
-
-use function PHPUnit\Framework\isEmpty;
 
 class Edit extends Component
 {
@@ -40,7 +37,7 @@ class Edit extends Component
     public function mount($id)
     {
         $this->record = Delivery::with('file')->find($id);
-        $this->registered_user = DeliveryPerson::all();
+        $this->registered_user = DeliveryPerson::where('is_active', true)->get();
         $this->selected_user = $this->record?->delivery_people_id ?? '';
 
         $this->years = range(Carbon::now()->year, Carbon::now()->year - 2);
@@ -127,11 +124,11 @@ class Edit extends Component
             DB::commit();
 
             session()->flash('flash.banner', '依頼を編集しました。');
-            $this->redirectRoute('delivery.overview');
         } catch (\ErrorException $e) {
             DB::rollBack();
             session()->flash('flash.bannerStyle', 'warning');
             session()->flash('flash.banner', $e->getMessage());
+        } finally {
             $this->redirectRoute('delivery.overview');
         }
     }

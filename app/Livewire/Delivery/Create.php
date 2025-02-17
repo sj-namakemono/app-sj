@@ -18,7 +18,7 @@ class Create extends Component
 
     #[Validate('required', message: '画像は必ず登録してください。')]
     #[Validate('image', message: '画像データをアップロードしてください')]
-    #[Validate('max:12288', message: 'サイズが大きすぎます。')]
+    #[Validate('max:10000', message: 'ファイルサイズが大きすぎます。')]
     public $photo;
     public $count;
 
@@ -145,11 +145,10 @@ class Create extends Component
                 ]);
             } catch (\Exception $e) {
                 session()->flash('flash.bannerStyle', 'warning');
-                session()->flash('flash.banner', '依頼は正常に送信されました。！）teamsに通知を送信できませんでした。urlを確認してください。');
+                session()->flash('flash.banner', 'teams通知が送信できませんでした。urlを確認してください。');
             }
         }
     }
-
 
     public function save()
     {
@@ -180,13 +179,12 @@ class Create extends Component
                 session()->flash('flash.banner', '依頼を送信しました。');
             }
 
-            $this->redirectRoute('delivery.overview');
-
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
             session()->flash('flash.bannerStyle', 'warning');
             session()->flash('flash.banner', $e->getMessage());
+        } finally {
             $this->redirectRoute('delivery.overview');
         }
     }

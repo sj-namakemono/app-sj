@@ -278,18 +278,23 @@
             @endif
             <div class="card-body">
               <h2 class="card-title">以下の内容で送信します</h2>
-              <div class="my-4 text-lg font-bold">
-                <div class="">引取場所：{{ $departure }}</div>
-                <div class="">送付先：{{ $destination }}</div>
-                <div class="">
-                  種別：{{ $type == 1 ? '下版関連' : 'その他' }}
+              <div class="my-4">
+                <div class="flex items-center gap-2">
+                  <kbd class="kbd kbd-lg">{{ $departure }}</kbd>
+                  >>>
+                  <kbd class="kbd kbd-lg">{{ $destination }}</kbd>
                 </div>
-                @if ($order_number)
-                  <div class="">受注番号：{{ $order_number }}</div>
-                @endif
-                <div class="">品名：{{ $product_name }}</div>
-                <div class="">個数：{{ $count }}</div>
-                <div class="">依頼者名：{{ $name }}</div>
+                <div class="mt-2 grid gap-1 text-lg font-bold">
+                  <div class="">
+                    種別：{{ $type == 1 ? '下版関連' : 'その他' }}
+                  </div>
+                  @if ($order_number)
+                    <div class="">受注番号：{{ $order_number }}</div>
+                  @endif
+                  <div class="">品名：{{ $product_name }}</div>
+                  <div class="">個数：{{ $count }}</div>
+                  <div class="">依頼者名：{{ $name }}</div>
+                </div>
               </div>
               <div class="card-actions justify-end">
                 <button type="submit" class="btn btn-primary">送信</button>

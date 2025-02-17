@@ -89,15 +89,19 @@ class Overview extends Component
                     'delivery_people_id' => $new_user->id
                 ]);
 
+                session()->flash('flash.banner', '出発日時を登録しました。');
                 $this->redirectRoute('delivery.overview');
-            }
-
-            if ($this->selected_user) {
+            } elseif ($this->selected_user) {
                 Delivery::find($recordId)->update([
                     'departure_datetime' => Carbon::now(),
                     'delivery_people_id' => $this->selected_user
                 ]);
 
+                session()->flash('flash.banner', '出発日時を登録しました。');
+                $this->redirectRoute('delivery.overview');
+            } else {
+                session()->flash('flash.bannerStyle', 'warning');
+                session()->flash('flash.banner', '配送担当者は必ず指定してください。');
                 $this->redirectRoute('delivery.overview');
             }
         }
@@ -109,6 +113,7 @@ class Overview extends Component
             'arrival_datetime' => Carbon::now(),
         ]);
 
+        session()->flash('flash.banner', '到着日時を登録しました。');
         $this->redirectRoute('delivery.overview');
     }
 

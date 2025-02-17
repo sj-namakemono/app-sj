@@ -35,7 +35,7 @@
               </x-secondary-button>
             </a>
             <x-secondary-button @click="search = !search"
-              x-bind:class="search ? 'ring-2 ring-indigo-500 ring-offset-2' : 'ring-0'">
+              x-bind:class="search ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="mr-2 size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -44,7 +44,7 @@
               検索
             </x-secondary-button>
             <x-secondary-button wire:click="$toggle('toggle')"
-              x-bind:class="toggle ? 'ring-2 ring-indigo-500 ring-offset-2' : 'ring-0'">
+              x-bind:class="toggle ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="mr-2 size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
@@ -193,7 +193,7 @@
                           </svg>
                         </button>
                         <dialog id="departure_modal_{{ $key }}"
-                          class="modal mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                          class="modal mx-auto max-w-6xl px-4 sm:px-6 lg:px-8" x-data="{ type: true }">
                           <div class="modal-box w-4/5 max-w-5xl">
                             <div class="grid gap-4 sm:grid-cols-2">
                               <figure class="flex items-center justify-center">
@@ -202,21 +202,34 @@
                               </figure>
                               <div class="grid gap-4">
                                 <h2 class="card-title">出発日時を記録</h2>
-                                <p>配送担当者をリストから選択、または入力してください。</p>
-                                @if ($registered_user->isnotEmpty())
-                                  <div class="max-h-40 overflow-auto rounded-lg">
-                                    @foreach ($registered_user as $user)
-                                      <div class="form-control rounded-md px-4 hover:bg-base-200">
-                                        <label class="label cursor-pointer">
-                                          <span class="label-text">{{ $user->name }}</span>
-                                          <input type="radio" name="radio-{{ $key }}" class="radio"
-                                            wire:model="selected_user" value="{{ $user->id }}" />
-                                        </label>
-                                      </div>
-                                    @endforeach
-                                  </div>
-                                @endif
-                                <label class="input input-bordered flex items-center gap-2">
+                                <p>配送担当者をリストから選択、または作成してください。</p>
+                                <div class="flex gap-2">
+                                  <x-secondary-button
+                                    x-bind:class="type ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'"
+                                    @click="type = true">リストから選択</x-secondary-button>
+                                  <x-secondary-button
+                                    x-bind:class="type ? 'ring-0' : 'ring-2 ring-primary ring-offset-2'"
+                                    @click="type = false">担当者を作成</x-secondary-button>
+                                </div>
+                                <div class="" x-show="type">
+                                  @if ($registered_user->isnotEmpty())
+                                    <div class="max-h-40 overflow-auto rounded-lg">
+                                      @foreach ($registered_user as $user)
+                                        <div class="form-control rounded-md px-4 hover:bg-base-200">
+                                          <label class="label cursor-pointer">
+                                            <span class="label-text">{{ $user->name }}</span>
+                                            <input type="radio" name="radio-{{ $key }}"
+                                              class="radio focus:outline-none" wire:model="selected_user"
+                                              value="{{ $user->id }}" />
+                                          </label>
+                                        </div>
+                                      @endforeach
+                                    </div>
+                                  @else
+                                    <div class="">配送担当者が登録されていません。</div>
+                                  @endif
+                                </div>
+                                <label class="input input-bordered flex items-center gap-2" x-show="!type">
                                   <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor"
                                     class="h-4 w-4 opacity-70">
                                     <path

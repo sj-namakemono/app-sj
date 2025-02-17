@@ -17,11 +17,11 @@
   </x-slot>
 
   <div class="py-12">
-    <div class="mx-auto grid max-w-7xl gap-8 px-4 sm:grid-cols-2 sm:px-6 lg:grid-cols-3 lg:px-8">
+    <div class="mx-auto grid max-w-7xl gap-8 px-4 md:grid-cols-2 md:px-6">
       <div class="card bg-base-100 shadow-xl">
         <div class="card-body">
           <h2 class="card-title">依頼リスト</h2>
-          <p>依頼された社内便を表示します。</p>
+          <p>受付中の依頼を表示します。</p>
           <div class="card-actions justify-end">
             <a role="button" class="btn btn-primary" href="{{ route('delivery.overview') }}" wire:navigate>開く</a>
           </div>
@@ -33,6 +33,15 @@
           <p>社内便を依頼します。</p>
           <div class="card-actions justify-end">
             <a role="button" href="{{ route('delivery.create') }}" class="btn btn-primary" wire:navigate>開く</a>
+          </div>
+        </div>
+      </div>
+      <div class="card bg-base-100 shadow-xl">
+        <div class="card-body">
+          <h2 class="card-title">履歴</h2>
+          <p>過去の依頼を確認できます。</p>
+          <div class="card-actions justify-end">
+            <a role="button" class="btn btn-primary" href="{{ route('delivery.completed') }}" wire:navigate>開く</a>
           </div>
         </div>
       </div>

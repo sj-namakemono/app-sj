@@ -8,7 +8,6 @@ use Livewire\WithPagination;
 use App\Models\DeliveryPerson;
 use Illuminate\Support\Carbon;
 use Illuminate\Validation\Rule;
-use Livewire\Attributes\Validate;
 use Livewire\WithoutUrlPagination;
 use Illuminate\Validation\ValidationException;
 

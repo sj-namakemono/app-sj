@@ -18,6 +18,7 @@ Route::middleware([
     Route::group(['prefix' => 'delivery', 'as' => 'delivery.'], function () {
         Route::get('/', App\Livewire\Delivery\Index::class)->name('index');
         Route::get('/overview', App\Livewire\Delivery\Overview::class)->name('overview');
+        Route::get('/completed', App\Livewire\Delivery\Completed::class)->name('completed');
         Route::get('/create', App\Livewire\Delivery\Create::class)->name('create');
         Route::get('/{id}/edit', App\Livewire\Delivery\Edit::class)->name('edit');
         Route::get('/setting', App\Livewire\Delivery\Setting::class)->name('setting');

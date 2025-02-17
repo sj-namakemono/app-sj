@@ -17,7 +17,7 @@
     </div>
   </x-slot>
 
-  <div class="py-12 text-sm" x-data="{ toggle: $wire.entangle('toggle'), search: false }">
+  <div class="py-12 text-sm">
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {{-- テーブルレイアウト --}}
       <div class="rounded-lg border shadow-xl">
@@ -29,97 +29,31 @@
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                   stroke="currentColor" class="mr-2 size-5">
                   <path stroke-linecap="round" stroke-linejoin="round"
-                    d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
+                    d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
                 </svg>
                 メニュー
               </x-secondary-button>
             </a>
-            <x-secondary-button @click="search = !search"
-              x-bind:class="search ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="mr-2 size-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-              </svg>
-              検索
-            </x-secondary-button>
-            <x-secondary-button wire:click="$toggle('toggle')"
-              x-bind:class="toggle ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'">
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="mr-2 size-5">
-                <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
-              </svg>
-              配送履歴
-            </x-secondary-button>
+            <a href="{{ route('delivery.completed') }}" wire:navigate>
+              <x-secondary-button>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                  stroke="currentColor" class="mr-2 size-5">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
+                </svg>
+                履歴
+              </x-secondary-button>
+            </a>
           </div>
           <a href="{{ route('delivery.create') }}" wire:navigate>
-            <x-button class="">
+            <x-button>
               社内便を依頼
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                stroke="currentColor" class="ml-2 size-5">
+                stroke="currentColor" class="size-5">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M12 4.5v15m7.5-7.5h-15" />
               </svg>
             </x-button>
           </a>
-        </div>
-        {{-- 検索 --}}
-        <div class="grid gap-4 border-y p-4" x-show="search" x-cloak>
-          <div class="w-fit">
-            <x-label for="" value="依頼完了日" />
-            <div class="mt-2 grid gap-4 md:grid-cols-3">
-              <div class="flex items-center gap-2">
-                <label class="form-control w-full max-w-xs">
-                  <select class="select select-bordered" wire:model="selected_year">
-                    <option value="" disabled></option>
-                    @foreach ($years as $year)
-                      <option value="{{ $year }}">{{ $year }}</option>
-                    @endforeach
-                  </select>
-                </label>
-                年
-              </div>
-              <div class="flex items-center gap-2">
-                <label class="form-control w-full max-w-xs">
-                  <select class="select select-bordered" wire:model="selected_month">
-                    <option value="" disabled></option>
-                    @foreach ($months as $month)
-                      <option value="{{ $month }}">{{ $month }}</option>
-                    @endforeach
-                  </select>
-                </label>
-                月
-              </div>
-            </div>
-          </div>
-          <div class="max-w-lg">
-            <x-label for="search_number" value="受注番号" />
-            <x-input id="search_number" type="text" class="mt-2 block w-full" wire:model="order_number"
-              placeholder="" autocomplete="off" />
-          </div>
-          <div class="max-w-lg">
-            <x-label for="search_product" value="品名" />
-            <x-input id="search_product" type="text" class="mt-2 block w-full" wire:model="product_name"
-              placeholder="" autocomplete="off" />
-          </div>
-          <div class="max-w-lg">
-            <x-label for="search_person" value="配送担当者" />
-            <div class="mt-2 flex items-center gap-2">
-              <label class="form-control w-full max-w-xs">
-                <select class="select select-bordered" wire:model="delivery_person">
-                  <option value="" disabled></option>
-                  @foreach ($registered_user as $user)
-                    <option value="{{ $user->id }}">{{ $user->name }}</option>
-                  @endforeach
-                </select>
-              </label>
-            </div>
-          </div>
-          <div class="flex gap-2">
-            <x-button wire:click="searchRecord">検索</x-button>
-            <x-secondary-button wire:click="searchClear">検索条件をクリア</x-secondary-button>
-            <x-secondary-button @click="search = !search">閉じる</x-secondary-button>
-          </div>
         </div>
         {{-- テーブル --}}
         <div class="overflow-x-scroll rounded-b-lg bg-base-100">
@@ -186,8 +120,8 @@
                         <button class="btn btn-circle btn-primary w-24"
                           onclick="departure_modal_{{ $key }}.showModal()">
                           出発
-                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                            stroke-width="1.5" stroke="currentColor" class="size-5">
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                            stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"
                               d="M15.042 21.672 13.684 16.6m0 0-2.51 2.225.569-9.47 5.227 7.917-3.286-.672Zm-7.518-.267A8.25 8.25 0 1 1 20.25 10.5M8.288 14.212A5.25 5.25 0 1 1 17.25 10.5" />
                           </svg>
@@ -358,7 +292,7 @@
                       @endif
                     </td>
                     {{-- ボタン --}}
-                    <td class="whitespace-nowrap" :class="toggle ? 'hidden' : 'table-cell'">
+                    <td class="whitespace-nowrap">
                       <div class="flex items-center justify-around gap-2">
                         <a class="btn btn-circle" href="{{ route('delivery.edit', ['id' => $record->id]) }}"
                           wire:navigate>
@@ -390,35 +324,12 @@
                         </dialog>
                       </div>
                     </td>
-                    <td class="whitespace-nowrap" :class="toggle ? 'table-cell' : 'hidden'">
-                      <button class="btn btn-circle" onclick="show_modal_{{ $key }}.showModal()">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                          stroke-width="1.5" stroke="currentColor" class="size-5">
-                          <path stroke-linecap="round" stroke-linejoin="round"
-                            d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                      </button>
-                      <dialog id="show_modal_{{ $key }}" class="modal">
-                        <div class="modal-box">
-                          <figure class="flex items-center justify-center">
-                            <img src="{{ asset('storage/' . $record->file->file_path) }}" alt=""
-                              class="h-60 w-auto">
-                          </figure>
-                          <div class="modal-action">
-                            <form method="dialog">
-                              <button class="btn">Close</button>
-                            </form>
-                          </div>
-                        </div>
-                      </dialog>
-                    </td>
                   </tr>
                 @endforeach
               @else
                 <tr>
                   <td>
-                    <span x-show="!toggle">現在受付中の依頼はありません。</span>
-                    <span x-show="toggle" x-cloak>配送履歴がありません。</span>
+                    <span>現在受付中の依頼はありません。</span>
                   </td>
                 </tr>
               @endif

@@ -48,9 +48,9 @@
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="mr-2 size-5">
                 <path stroke-linecap="round" stroke-linejoin="round"
-                  d="M3.375 19.5h17.25m-17.25 0a1.125 1.125 0 0 1-1.125-1.125M3.375 19.5h7.5c.621 0 1.125-.504 1.125-1.125m-9.75 0V5.625m0 12.75v-1.5c0-.621.504-1.125 1.125-1.125m18.375 2.625V5.625m0 12.75c0 .621-.504 1.125-1.125 1.125m1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125m0 3.75h-7.5A1.125 1.125 0 0 1 12 18.375m9.75-12.75c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125m19.5 0v1.5c0 .621-.504 1.125-1.125 1.125M2.25 5.625v1.5c0 .621.504 1.125 1.125 1.125m0 0h17.25m-17.25 0h7.5c.621 0 1.125.504 1.125 1.125M3.375 8.25c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125m17.25-3.75h-7.5c-.621 0-1.125.504-1.125 1.125m8.625-1.125c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125M12 10.875v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 10.875c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125M13.125 12h7.5m-7.5 0c-.621 0-1.125.504-1.125 1.125M20.625 12c.621 0 1.125.504 1.125 1.125v1.5c0 .621-.504 1.125-1.125 1.125m-17.25 0h7.5M12 14.625v-1.5m0 1.5c0 .621-.504 1.125-1.125 1.125M12 14.625c0 .621.504 1.125 1.125 1.125m-2.25 0c.621 0 1.125.504 1.125 1.125m0 1.5v-1.5m0 0c0-.621.504-1.125 1.125-1.125m0 0h7.5" />
+                  d="M20.25 6.375c0 2.278-3.694 4.125-8.25 4.125S3.75 8.653 3.75 6.375m16.5 0c0-2.278-3.694-4.125-8.25-4.125S3.75 4.097 3.75 6.375m16.5 0v11.25c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125V6.375m16.5 0v3.75m-16.5-3.75v3.75m16.5 0v3.75C20.25 16.153 16.556 18 12 18s-8.25-1.847-8.25-4.125v-3.75m16.5 0c0 2.278-3.694 4.125-8.25 4.125s-8.25-1.847-8.25-4.125" />
               </svg>
-              配送履歴を表示
+              配送履歴
             </x-secondary-button>
           </div>
           <a href="{{ route('delivery.create') }}" wire:navigate>
@@ -202,7 +202,12 @@
                               </figure>
                               <div class="grid gap-4">
                                 <h2 class="card-title">出発日時を記録</h2>
-                                <p>配送担当者をリストから選択、または作成してください。</p>
+                                <div class="flex items-center gap-2">
+                                  <kbd class="kbd">{{ $record->departure }}</kbd>
+                                  >>>
+                                  <kbd class="kbd">{{ $record->destination }}</kbd>
+                                </div>
+                                <p>配送担当者を登録してください。</p>
                                 <div class="flex gap-2">
                                   <x-secondary-button
                                     x-bind:class="type ? 'ring-2 ring-primary ring-offset-2' : 'ring-0'"
@@ -273,14 +278,20 @@
                                   <img src="{{ asset('storage/' . $record->file->file_path) }}" alt=""
                                     class="h-60 w-auto rounded-md object-cover">
                                 </figure>
-                                <div class="">
+                                <div class="grid gap-4">
                                   <h3 class="text-lg font-bold">到着日時を記録</h3>
-                                  <p class="my-4">以下の荷物を配送しました。</p>
-                                  <ul class="my-4 rounded-md border p-4 font-bold">
+                                  <div class="flex items-center gap-2">
+                                    <kbd class="kbd">{{ $record->departure }}</kbd>
+                                    >>>
+                                    <kbd class="kbd">{{ $record->destination }}</kbd>
+                                  </div>
+                                  <p class="">以下の荷物を配送しました。</p>
+                                  <ul class="rounded-md border p-4 font-bold">
+                                    <li>出発日時：{{ $record->departure_datetime->format('Y/m/d H:i') }}</li>
                                     <li>品名：{{ $record->product_name }}</li>
                                     <li>個数：{{ $record->count }}</li>
                                   </ul>
-                                  <div class="mt-4 flex justify-end gap-2">
+                                  <div class="flex justify-end gap-2">
                                     <form method="dialog">
                                       <button class="btn">キャンセル</button>
                                     </form>
@@ -322,9 +333,11 @@
                                   <h3 class="text-lg font-bold">受け取り日時を記録</h3>
                                   <p class="my-4">
                                     以下の荷物を受け取りました。<br>
-                                    <span class="text-xs text-red-400">*この操作は取り消せません。必ず手元に荷物があることを確認してください。</span>
+                                    <span class="text-xs text-red-400">*この操作は取り消せません。写真の荷物と一致していることを確認してください。</span>
                                   </p>
                                   <ul class="my-4 rounded-md border p-4 font-bold">
+                                    <li>出発日時：{{ $record->departure_datetime->format('Y/m/d H:i') }}</li>
+                                    <li>到着日時：{{ $record->arrival_datetime->format('Y/m/d H:i') }}</li>
                                     <li>品名：{{ $record->product_name }}</li>
                                     <li>個数：{{ $record->count }}</li>
                                   </ul>
@@ -347,16 +360,16 @@
                     {{-- ボタン --}}
                     <td class="whitespace-nowrap" :class="toggle ? 'hidden' : 'table-cell'">
                       <div class="flex items-center justify-around gap-2">
-                        <a href="{{ route('delivery.edit', ['id' => $record->id]) }}" wire:navigate>
-                          <button class="btn btn-circle">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
-                              stroke-width="1.5" stroke="currentColor" class="size-5">
-                              <path stroke-linecap="round" stroke-linejoin="round"
-                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                            </svg>
-                          </button>
+                        <a class="btn btn-circle" href="{{ route('delivery.edit', ['id' => $record->id]) }}"
+                          wire:navigate>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                            stroke-width="1.5" stroke="currentColor" class="size-5">
+                            <path stroke-linecap="round" stroke-linejoin="round"
+                              d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                          </svg>
                         </a>
-                        <button class="btn btn-circle" onclick="delete_modal_{{ $key }}.showModal()">
+                        <button class="btn btn-circle btn-error"
+                          onclick="delete_modal_{{ $key }}.showModal()">
                           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                             stroke-width="1.5" stroke="currentColor" class="size-5">
                             <path stroke-linecap="round" stroke-linejoin="round"

@@ -27,11 +27,10 @@
             <a href="{{ route('delivery.index') }}" wire:navigate>
               <x-secondary-button>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="mr-2 size-5">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="m18.75 4.5-7.5 7.5 7.5 7.5m-6-15L5.25 12l7.5 7.5" />
+                  stroke="currentColor" class="mr-1 size-5">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
                 </svg>
-                メニュー
+                閉じる
               </x-secondary-button>
             </a>
             <a href="{{ route('delivery.completed') }}" wire:navigate>

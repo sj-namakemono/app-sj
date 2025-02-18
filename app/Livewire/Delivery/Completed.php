@@ -40,7 +40,7 @@ class Completed extends Component
             array_push($this->years, $now->year - $i);
         }
 
-        $this->registered_user = DeliveryPerson::where('is_active', true)->get();
+        $this->registered_user = DeliveryPerson::all();
     }
 
     public function updatedNum()
@@ -66,21 +66,24 @@ class Completed extends Component
     {
         $query = Delivery::query()->where('is_deleted', false);
 
-        if ($this->selected_year && $this->selected_month) {
-            $filtered = $query->whereYear('receipt_datetime', $this->selected_year)->whereMonth('receipt_datetime', $this->selected_month)->orderByDesc('id')->paginate($this->num);
-        } elseif ($this->selected_year) {
-            $filtered = $query->whereYear('receipt_datetime', $this->selected_year)->orderByDesc('id')->paginate($this->num);
-        } elseif ($this->selected_month) {
-            $filtered = $query->whereMonth('receipt_datetime', $this->selected_month)->orderByDesc('id')->paginate($this->num);
-        } elseif ($this->order_number) {
-            $filtered = $query->where('order_number', $this->order_number)->orderByDesc('id')->paginate($this->num);
-        } elseif ($this->product_name) {
-            $filtered = $query->whereLike('product_name', '%' . $this->product_name . '%')->orderByDesc('id')->paginate($this->num);
-        } elseif ($this->delivery_person) {
-            $filtered = $query->where('delivery_people_id', $this->delivery_person)->orderByDesc('id')->paginate($this->num);
-        } else {
-            $filtered = $query->whereNotNull('receipt_datetime')->orderByDesc('id')->paginate($this->num);
-        }
+        $query->when($this->selected_year, function ($q) {
+            $q->whereYear('receipt_datetime', $this->selected_year);
+        });
+        $query->when($this->selected_month, function ($q) {
+            $q->whereMonth('receipt_datetime', $this->selected_month);
+        });
+        $query->when($this->order_number, function ($q) {
+            $q->where('order_number', $this->order_number);
+        });
+        $query->when($this->product_name, function ($q) {
+            $q->where('product_name', 'like', '%' . $this->product_name . '%');
+        });
+        $query->when($this->delivery_person, function ($q) {
+            $q->where('delivery_people_id', $this->delivery_person);
+        });
+        $query->whereNotNull('receipt_datetime');
+
+        $filtered = $query->orderByDesc('id')->paginate($this->num);
 
         return view('livewire.delivery.completed', [
             'records' => $filtered

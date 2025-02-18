@@ -6,15 +6,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
+Route::middleware(['ip.restrict', 'auth:sanctum', config('jetstream.auth_session'), 'verified'])->group(function () {
+    // アプリ一覧
     Route::get('/', function () {
         return view('dashboard');
     })->name('dashboard');
 
+    // 社内便
     Route::group(['prefix' => 'delivery', 'as' => 'delivery.'], function () {
         Route::get('/', App\Livewire\Delivery\Index::class)->name('index');
         Route::get('/overview', App\Livewire\Delivery\Overview::class)->name('overview');
